@@ -21,8 +21,8 @@ from schema_context import get_schema_context_prompt, MART_SCHEMA_DDL
 from llm_client import TextToSQLClient
 
 app = FastAPI(
-    title="Praxis-Data NL Query Agent",
-    description="Natural Language Text-to-SQL interface querying the Praxis-Data Warehouse Data Marts.",
+    title="StreamQuery NL Query Agent",
+    description="Natural Language Text-to-SQL interface querying the StreamQuery Warehouse Data Marts.",
     version="1.0.0"
 )
 
@@ -79,7 +79,7 @@ def index_page():
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Praxis-Data NL Query Agent</title>
+        <title>StreamQuery NL Query Agent</title>
         <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; background: #0f172a; color: #f8fafc; }
             h1 { color: #38bdf8; }
@@ -90,7 +90,7 @@ def index_page():
         </style>
     </head>
     <body>
-        <h1>Praxis-Data Natural Language Query Agent</h1>
+        <h1>StreamQuery Natural Language Query Agent</h1>
         <div class="card">
             <h3>Interactive API Documentation</h3>
             <p>Explore and test the API directly using Swagger UI: <a href="/docs"><b>/docs</b></a> or ReDoc: <a href="/redoc"><b>/redoc</b></a></p>

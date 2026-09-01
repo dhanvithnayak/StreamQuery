@@ -43,7 +43,7 @@ services:
   # ==========================================
   postgres:
     image: postgres:15-alpine
-    container_name: praxis-postgres
+    container_name: streamquery-postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
@@ -64,7 +64,7 @@ services:
   # ==========================================
   kafka:
     image: confluentinc/cp-kafka:7.5.0
-    container_name: praxis-kafka
+    container_name: streamquery-kafka
     ports:
       - "29092:29092"
       - "9092:9092"
@@ -94,7 +94,7 @@ services:
   # ==========================================
   kafka-init:
     image: confluentinc/cp-kafka:7.5.0
-    container_name: praxis-kafka-init
+    container_name: streamquery-kafka-init
     depends_on:
       kafka:
         condition: service_healthy
@@ -114,7 +114,7 @@ services:
   # ==========================================
   airflow-init:
     <<: *airflow-common
-    container_name: praxis-airflow-init
+    container_name: streamquery-airflow-init
     command:
       - bash
       - -c
@@ -125,7 +125,7 @@ services:
           --firstname Data \
           --lastname Engineer \
           --role Admin \
-          --email admin@praxisdata.local \
+          --email admin@streamquery.local \
           --password "${_AIRFLOW_WWW_USER_PASSWORD:-airflow}" || true
 
   # ==========================================
@@ -133,7 +133,7 @@ services:
   # ==========================================
   airflow-webserver:
     <<: *airflow-common
-    container_name: praxis-airflow-webserver
+    container_name: streamquery-airflow-webserver
     command: airflow webserver
     ports:
       - "8080:8080"
@@ -151,7 +151,7 @@ services:
   # ==========================================
   airflow-scheduler:
     <<: *airflow-common
-    container_name: praxis-airflow-scheduler
+    container_name: streamquery-airflow-scheduler
     command: airflow scheduler
     depends_on:
       airflow-init:
@@ -164,7 +164,7 @@ services:
     build:
       context: ./agent
       dockerfile: Dockerfile
-    container_name: praxis-agent-api
+    container_name: streamquery-agent-api
     ports:
       - "8000:8000"
     environment:

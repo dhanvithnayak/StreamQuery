@@ -1,4 +1,4 @@
-# Praxis-Data — Streaming ELT Pipeline with NL Query Agent
+# StreamQuery — Streaming ELT Pipeline with NL Query Agent
 
 [![dbt](https://img.shields.io/badge/dbt-1.7+-FF694B?logo=dbt&logoColor=white)](https://getdbt.com)
 [![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-2.8+-017CEE?logo=apacheairflow&logoColor=white)](https://airflow.apache.org)
@@ -15,7 +15,7 @@ An end-to-end, portfolio-ready data engineering platform that ingests real-time 
 ```
 [Event Producer] --> [Kafka topic: orders.events] --> [Consumer Micro-Loader] --> [Warehouse: raw.orders]
                                                                                             |
-                                                                          [Airflow DAG (praxis_data_elt_dag):
+                                                                          [Airflow DAG (streamquery_elt_dag):
                                                                            Ingestion Sensor -> dbt run -> dbt test]
                                                                                             |
                                                                           [dbt: stg_orders -> dim_customers,
@@ -41,7 +41,7 @@ An end-to-end, portfolio-ready data engineering platform that ingests real-time 
 ### 1. Clone & Start Containers
 ```bash
 # Clone and enter directory
-cd praxis-data
+cd StreamQuery
 
 # Copy environment defaults
 cp .env.example .env
@@ -71,7 +71,7 @@ docker compose exec airflow-webserver python /opt/airflow/producer/produce_event
 ### Step 2: Trigger the Airflow ELT Pipeline
 Trigger the DAG to ingest from Kafka into `raw.orders`, execute `dbt run`, and enforce `dbt test` quality contracts:
 ```bash
-docker compose exec airflow-webserver airflow dags trigger praxis_data_elt_dag
+docker compose exec airflow-webserver airflow dags trigger streamquery_elt_dag
 ```
 You can view real-time task progression in the Airflow UI at [http://localhost:8080](http://localhost:8080).
 
@@ -133,9 +133,9 @@ This intentionally injects a corrupt order status and negative unit price into `
 
 ## 🎯 What This Demonstrates (Resume Bullet Alignment)
 
-| Resume Bullet | Implementation Proof in Praxis-Data |
+| Resume Bullet | Implementation Proof in StreamQuery |
 | :--- | :--- |
-| **1. "Built a batch/streaming ELT pipeline ingesting order events via Kafka, orchestrated by Airflow DAGs into BigQuery/Postgres"** | - Configured Kafka broker in KRaft mode with Python event publisher.<br>- Implemented micro-batch consumer loading to PostgreSQL `raw.orders` with idempotent upsert keys.<br>- Built Airflow DAG (`praxis_data_elt_dag`) linking ingestion sensor -> `dbt run` -> `dbt test` -> `dbt docs`. |
+| **1. "Built a batch/streaming ELT pipeline ingesting order events via Kafka, orchestrated by Airflow DAGs into BigQuery/Postgres"** | - Configured Kafka broker in KRaft mode with Python event publisher.<br>- Implemented micro-batch consumer loading to PostgreSQL `raw.orders` with idempotent upsert keys.<br>- Built Airflow DAG (`streamquery_elt_dag`) linking ingestion sensor -> `dbt run` -> `dbt test` -> `dbt docs`. |
 | **2. "Modeled staging-to-mart dbt layers with automated data-quality tests, enforcing schema contracts on ingest"** | - Developed dimensional data models (`stg_orders`, `dim_customers`, `dim_products`, `fct_orders`).<br>- Enforced schema contracts (`unique`, `not_null`, `relationships` foreign keys, `accepted_values` enum checks, and custom singular SQL tests).<br>- Integrated strict failure gates preventing bad data from entering marts. |
 | **3. "Extended an LLM gateway into a text-to-SQL agent, letting non-technical users query marts in natural language"** | - Built a FastAPI `/query` endpoint injecting DDL and dimensional schemas into prompt context.<br>- Supports multi-provider adapters (OpenAI, Anthropic, Gemini) with deterministic offline fallback.<br>- Enforced read-only SQL safety guards and executed live queries against PostgreSQL marts. |
 
@@ -144,7 +144,7 @@ This intentionally injects a corrupt order status and negative unit price into `
 ## 📁 Repository Structure
 
 ```
-praxis-data/
+StreamQuery/
 ├── docker-compose.yml              # Kafka, Postgres, Airflow, and Agent API services
 ├── Dockerfile.airflow              # Airflow image with dbt-postgres and Kafka dependencies
 ├── .env.example                    # Sample configuration and credentials
@@ -158,7 +158,7 @@ praxis-data/
 │   ├── requirements.txt
 │   └── load_to_warehouse.py        # Micro-batch Kafka-to-Warehouse loader
 ├── dags/
-│   └── praxis_data_elt_dag.py      # Airflow ELT orchestration DAG
+│   └── streamquery_elt_dag.py      # Airflow ELT orchestration DAG
 ├── dbt_project/
 │   ├── dbt_project.yml             # dbt project configurations
 │   ├── profiles.yml                # Postgres / BigQuery warehouse targets

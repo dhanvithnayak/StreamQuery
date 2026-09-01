@@ -1,4 +1,4 @@
-praxis_data:
+streamquery:
   target: "{{ env_var('DBT_TARGET', 'postgres') }}"
   outputs:
     postgres:
@@ -14,7 +14,7 @@ praxis_data:
     bigquery:
       type: bigquery
       method: service-account
-      project: "{{ env_var('GCP_PROJECT_ID', 'praxis-data-project') }}"
+      project: "{{ env_var('GCP_PROJECT_ID', 'streamquery-project') }}"
       dataset: "{{ env_var('GCP_DATASET', 'analytics') }}"
       threads: 4
       keyfile: "{{ env_var('GCP_KEYFILE_PATH', '/opt/airflow/gcp-key.json') }}"

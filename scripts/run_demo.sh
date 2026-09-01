@@ -8,7 +8,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 echo -e "${CYAN}==============================================================${NC}"
-echo -e "${CYAN}    Praxis-Data: Streaming ELT Pipeline & NL Query Agent      ${NC}"
+echo -e "${CYAN}    StreamQuery: Streaming ELT Pipeline & NL Query Agent      ${NC}"
 echo -e "${CYAN}==============================================================${NC}"
 
 # 1. Check containers
@@ -47,5 +47,5 @@ curl -s -X POST http://localhost:8000/query \
   -d '{"query": "Show me sales and order counts breakdown by region"}' | python3 -m json.tool
 
 echo -e "\n${CYAN}==============================================================${NC}"
-echo -e "${GREEN}    Praxis-Data End-to-End Walkthrough Completed Successfully!${NC}"
+echo -e "${GREEN}    StreamQuery End-to-End Walkthrough Completed Successfully!${NC}"
 echo -e "${CYAN}==============================================================${NC}"

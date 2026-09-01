@@ -129,7 +129,7 @@ def init_warehouse_schema(conn):
 
 class UniversalKafkaConsumer:
     """Universal Kafka consumer supporting confluent-kafka or kafka-python."""
-    def __init__(self, broker: str, topic: str, group_id: str = "praxis-warehouse-loader"):
+    def __init__(self, broker: str, topic: str, group_id: str = "streamquery-warehouse-loader"):
         self.broker = broker
         self.topic = topic
         self.group_id = group_id
@@ -238,10 +238,10 @@ def insert_records(conn, records: list) -> int:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Praxis-Data Kafka to Warehouse Consumer")
+    parser = argparse.ArgumentParser(description="StreamQuery Kafka to Warehouse Consumer")
     parser.add_argument("--broker", default=os.getenv("KAFKA_BROKER", "localhost:29092"), help="Kafka broker")
     parser.add_argument("--topic", default=os.getenv("KAFKA_TOPIC", "orders.events"), help="Kafka topic")
-    parser.add_argument("--group-id", default="praxis-warehouse-loader", help="Kafka consumer group ID")
+    parser.add_argument("--group-id", default="streamquery-warehouse-loader", help="Kafka consumer group ID")
     parser.add_argument("--db-host", default=os.getenv("DBT_HOST", os.getenv("POSTGRES_HOST", "localhost")), help="Postgres host")
     parser.add_argument("--db-port", default=int(os.getenv("DBT_PORT", os.getenv("POSTGRES_PORT", "5432"))), help="Postgres port")
     parser.add_argument("--db-name", default=os.getenv("DBT_DATABASE", os.getenv("WAREHOUSE_DB", "warehouse")), help="Postgres db name")
@@ -254,7 +254,7 @@ def main():
     args = parser.parse_args()
 
     print("==================================================")
-    print("  Praxis-Data Warehouse Loader Starting")
+    print("  StreamQuery Warehouse Loader Starting")
     print(f"  Kafka:     {args.broker} (Topic: {args.topic})")
     print(f"  Warehouse: {args.db_user}@{args.db_host}:{args.db_port}/{args.db_name}")
     print(f"  Mode:      {'Daemon (Continuous)' if args.daemon else 'Batch Ingestion'}")

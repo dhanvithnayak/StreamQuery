@@ -1,8 +1,8 @@
-name: 'praxis_data'
+name: 'streamquery'
 version: '1.0.0'
 config-version: 2
 
-profile: 'praxis_data'
+profile: 'streamquery'
 
 model-paths: ["models"]
 analysis-paths: ["analyses"]
@@ -16,7 +16,7 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  praxis_data:
+  streamquery:
     staging:
       +schema: staging
       +materialized: view

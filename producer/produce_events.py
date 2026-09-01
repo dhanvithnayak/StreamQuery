@@ -119,7 +119,7 @@ class UniversalKafkaProducer:
                 try:
                     self.client = ConfluentProducer({
                         "bootstrap.servers": bootstrap_servers,
-                        "client.id": "praxis-order-producer",
+                        "client.id": "streamquery-order-producer",
                         "acks": "all"
                     })
                     self.client_type = "confluent"
@@ -160,7 +160,7 @@ class UniversalKafkaProducer:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Praxis-Data Synthetic Order Event Producer")
+    parser = argparse.ArgumentParser(description="StreamQuery Synthetic Order Event Producer")
     parser.add_argument("--broker", default=os.getenv("KAFKA_BROKER", "localhost:29092"), help="Kafka bootstrap broker")
     parser.add_argument("--topic", default=os.getenv("KAFKA_TOPIC", "orders.events"), help="Kafka destination topic")
     parser.add_argument("--count", type=int, default=50, help="Number of events to produce (0 for infinite if --continuous)")
@@ -171,7 +171,7 @@ def main():
     args = parser.parse_args()
 
     print(f"==================================================")
-    print(f"  Praxis-Data Order Event Producer Starting")
+    print(f"  StreamQuery Order Event Producer Starting")
     print(f"  Broker:    {args.broker}")
     print(f"  Topic:     {args.topic}")
     print(f"  Count:     {'Continuous' if args.continuous else args.count}")

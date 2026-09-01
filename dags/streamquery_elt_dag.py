@@ -1,5 +1,5 @@
 """
-Airflow DAG: Praxis-Data Streaming ELT Orchestrator
+Airflow DAG: StreamQuery Streaming ELT Orchestrator
 Dependency Chain: Kafka Ingest -> Check Raw Data -> dbt Run -> dbt Test (Schema Contracts) -> dbt Docs
 """
 
@@ -50,13 +50,13 @@ def verify_raw_records(**kwargs):
 
 
 with DAG(
-    dag_id="praxis_data_elt_dag",
+    dag_id="streamquery_elt_dag",
     default_args=default_args,
     description="Orchestrates Kafka micro-batch ingest, dbt staging-to-mart transformations, and contract testing",
     schedule_interval=timedelta(hours=1),
     start_date=datetime(2026, 1, 1),
     catchup=False,
-    tags=["elt", "kafka", "dbt", "warehouse", "praxis-data"],
+    tags=["elt", "kafka", "dbt", "warehouse", "streamquery"],
 ) as dag:
 
     # 1. Ingest Kafka events into raw.orders (Micro-batch load)
