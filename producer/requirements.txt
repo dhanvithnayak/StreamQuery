@@ -1,0 +1,4 @@
+confluent-kafka>=2.3.0
+kafka-python-ng>=2.2.2
+faker>=22.5.1
+python-dotenv>=1.0.1

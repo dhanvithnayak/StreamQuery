@@ -1,0 +1,105 @@
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ env_var('DBT_DATABASE', 'warehouse') }}"
+    schema: raw
+    tables:
+      - name: orders
+        description: "Raw order event stream ingested from Kafka"
+        columns:
+          - name: order_id
+            description: "Unique alphanumeric order identifier"
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            description: "Customer identifier"
+            tests:
+              - not_null
+          - name: product_id
+            description: "Product SKU identifier"
+            tests:
+              - not_null
+          - name: quantity
+            description: "Units ordered"
+            tests:
+              - not_null
+          - name: unit_price
+            description: "Price per unit at time of purchase"
+            tests:
+              - not_null
+          - name: order_status
+            description: "Status of the order"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['completed', 'pending', 'cancelled', 'returned']
+          - name: region
+            description: "Fulfillment sales region"
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['NA', 'EU', 'APAC', 'LATAM']
+          - name: ordered_at
+            description: "Original event generation timestamp"
+            tests:
+              - not_null
+
+models:
+  - name: stg_orders
+    description: "Cleaned and standardized order events 1:1 with raw ingest"
+    columns:
+      - name: order_id
+        description: "Primary key for orders"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to dim_customers"
+        tests:
+          - not_null
+      - name: customer_name
+        description: "Customer full name"
+      - name: customer_email
+        description: "Customer email address"
+      - name: product_id
+        description: "Foreign key to dim_products"
+        tests:
+          - not_null
+      - name: product_name
+        description: "Name of ordered product"
+      - name: category
+        description: "Product category"
+      - name: quantity
+        description: "Number of units purchased"
+        tests:
+          - not_null
+      - name: unit_price
+        description: "Price per unit"
+        tests:
+          - not_null
+      - name: gross_amount
+        description: "Calculated gross amount (quantity * unit_price)"
+        tests:
+          - not_null
+      - name: order_status
+        description: "Current lifecycle status"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['completed', 'pending', 'cancelled', 'returned']
+      - name: region
+        description: "Geographic sales region"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['NA', 'EU', 'APAC', 'LATAM']
+      - name: ordered_at
+        description: "Timestamp of order event"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Truncated date of order event"
+        tests:
+          - not_null

@@ -1,0 +1,121 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimensional model containing lifetime metrics, engagement history, and value segmentation."
+    columns:
+      - name: customer_id
+        description: "Primary key for customer entity"
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Full name of customer"
+        tests:
+          - not_null
+      - name: customer_email
+        description: "Email address of customer"
+      - name: first_order_date
+        description: "Timestamp of customer's earliest order"
+      - name: last_order_date
+        description: "Timestamp of customer's most recent order"
+      - name: total_orders
+        description: "Total order count across all statuses"
+      - name: completed_orders
+        description: "Total count of successfully fulfilled orders"
+      - name: lifetime_value
+        description: "Sum of gross revenue from completed orders"
+      - name: total_items_purchased
+        description: "Cumulative units purchased from completed orders"
+      - name: customer_tier
+        description: "Value tier segmentation: VIP (>= $1000), High Value (>= $400), Repeat, or Standard"
+
+  - name: dim_products
+    description: "Product dimensional catalog containing current pricing and aggregated sales performance."
+    columns:
+      - name: product_id
+        description: "Primary key for product SKU"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Descriptive name of product"
+        tests:
+          - not_null
+      - name: category
+        description: "Merchandise category (Electronics, Apparel, Home & Kitchen, Books)"
+        tests:
+          - not_null
+      - name: current_unit_price
+        description: "Latest unit price in USD"
+      - name: total_orders_count
+        description: "Number of orders containing this product"
+      - name: total_units_sold
+        description: "Total units fulfilled in completed orders"
+      - name: total_revenue
+        description: "Cumulative gross revenue generated from completed orders"
+      - name: avg_units_per_order
+        description: "Average quantity per order line"
+
+  - name: fct_orders
+    description: "Granular transactional fact table where each row represents an individual order event."
+    columns:
+      - name: order_id
+        description: "Primary key for order line"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key reference to dim_customers"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: product_id
+        description: "Foreign key reference to dim_products"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: product_id
+      - name: quantity
+        description: "Quantity of items ordered"
+        tests:
+          - not_null
+      - name: unit_price
+        description: "Unit price at time of order"
+        tests:
+          - not_null
+      - name: gross_amount
+        description: "Total line item dollar amount (quantity * unit_price)"
+        tests:
+          - not_null
+      - name: order_status
+        description: "Fulfillment status of order"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['completed', 'pending', 'cancelled', 'returned']
+      - name: is_completed
+        description: "Binary indicator (1 if completed, 0 otherwise)"
+      - name: region
+        description: "Geographical sales territory"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['NA', 'EU', 'APAC', 'LATAM']
+      - name: ordered_at
+        description: "Exact UTC timestamp of order placement"
+        tests:
+          - not_null
+      - name: order_date
+        description: "Date of order placement"
+        tests:
+          - not_null
+      - name: order_year
+        description: "Year extracted from order timestamp"
+      - name: order_month
+        description: "Month (1-12) extracted from order timestamp"
+      - name: order_day_of_week
+        description: "Three-letter day of week (e.g., Mon, Tue)"

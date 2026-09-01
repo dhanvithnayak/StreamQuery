@@ -1,0 +1,22 @@
+praxis_data:
+  target: "{{ env_var('DBT_TARGET', 'postgres') }}"
+  outputs:
+    postgres:
+      type: postgres
+      host: "{{ env_var('DBT_HOST', 'postgres') }}"
+      user: "{{ env_var('DBT_USER', 'postgres') }}"
+      password: "{{ env_var('DBT_PASSWORD', 'postgres') }}"
+      port: "{{ env_var('DBT_PORT', '5432') | int }}"
+      dbname: "{{ env_var('DBT_DATABASE', 'warehouse') }}"
+      schema: "{{ env_var('DBT_DEFAULT_SCHEMA', 'public') }}"
+      threads: 4
+      keepalives_idle: 0
+    bigquery:
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('GCP_PROJECT_ID', 'praxis-data-project') }}"
+      dataset: "{{ env_var('GCP_DATASET', 'analytics') }}"
+      threads: 4
+      keyfile: "{{ env_var('GCP_KEYFILE_PATH', '/opt/airflow/gcp-key.json') }}"
+      timeout_seconds: 300
+      priority: interactive
